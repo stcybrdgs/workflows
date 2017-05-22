@@ -1,14 +1,15 @@
 var gulp = require('gulp'),
     gutil = require('gulp-util'),
-    coffee = require('gulp-coffee');
+    coffee = require('gulp-coffee'),
+    browserify = require('gulp-browserify'),
     concat = require('gulp-concat');
 
 var coffeeSources = ['components/coffee/tagline.coffee'];    
 var jsSources = [
-  'components/scripts/rclick.js',
-  'components/scripts/pixgrid.js',
-  'components/scripts/tagline.js',
-  'components/scripts/template.js'
+    'components/scripts/rclick.js',
+    'components/scripts/pixgrid.js',
+    'components/scripts/tagline.js',
+    'components/scripts/template.js'
 ];
 
 gulp.task('log', function(){
@@ -23,7 +24,8 @@ gulp.task('coffee', function(){
 });
 
 gulp.task('js', function() {
-  gulp.src(jsSources)
-    .pipe(concat('script.js'))
-    .pipe(gulp.dest('builds/development/js'))
+  	gulp.src(jsSources)
+    	.pipe(concat('script.js'))
+    	.pipe(browserify())
+    	.pipe(gulp.dest('builds/development/js'))
 });
