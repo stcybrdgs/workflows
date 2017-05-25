@@ -4,6 +4,7 @@ var gulp = require('gulp'),
     browserify = require('gulp-browserify'),
     compass = require('gulp-compass'),
     concat = require('gulp-concat');
+    connect = require('gulp-connect');
 
 var coffeeSources = ['components/coffee/tagline.coffee'];    
 var jsSources = [
@@ -31,6 +32,7 @@ gulp.task('js', function() {
     	.pipe(concat('script.js'))
     	.pipe(browserify())
     	.pipe(gulp.dest('builds/development/js'))
+        .pipe(connect.reload())
 });
 
 gulp.task('compass', function() {
@@ -41,6 +43,7 @@ gulp.task('compass', function() {
     	})
     	.on('error', gutil.log))
     	.pipe(gulp.dest('builds/development/css'))
+        .pipe(connect.reload())
 });
 
 gulp.task('watch', function() {
@@ -49,4 +52,12 @@ gulp.task('watch', function() {
     gulp.watch('components/sass/*.scss', ['compass']);
 });
 
-gulp.task('default', ['coffee', 'js', 'compass', 'watch']);
+gulp.task('default', ['coffee', 'js', 'compass', 'connect', 'watch']);
+
+gulp.task('connect', function() { // rem 'callback' == 'anonymous function'
+  connect.server({
+    root: 'builds/development',
+    port: 8000, // numbers don't need quotes
+    livereload: true // booleans don't need quotes
+  });
+});
