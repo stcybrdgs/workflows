@@ -7,7 +7,8 @@ var gulp = require('gulp'),
     connect = require('gulp-connect'),
     uglify = require('gulp-uglify'),
     cleanCss = require('gulp-clean-css'),
-    gulpIf = require('gulp-if');
+    gulpIf = require('gulp-if'),
+    htmlMin = require('gulp-html-minify');
 
 var env,
     coffeeSources,
@@ -17,7 +18,7 @@ var env,
     jsonSources,
     outputDir, 
     sassStyle,
-    condition;
+    prodBuild;
 
 var env = process.env.NODE_ENV || 'dev';
 // if an environment variable has been set, use it, otherwise assume
@@ -26,11 +27,11 @@ var env = process.env.NODE_ENV || 'dev';
 if ( env === 'dev' ){
     outputDir = 'builds/development/';
     sassStyle = 'expanded';
-    condition = false;
+    prodBuild = false;
 } else if ( env === 'prod' ) {
     outputDir = 'builds/production/';
     sassStyle = 'compressed';
-    condition = true;
+    prodBuild = true;
 } else {
     console.log( 'Error: invalid environment variable' );
 }
@@ -48,7 +49,9 @@ htmlSources = [outputDir + '*.html'];
 jsonSources = [outputDir + 'js/*.json'];
 
 gulp.task('html', function() {
-    gulp.src(htmlSources)
+    gulp.src('builds/development/*.html')
+        .pipe(gulpIf(prodBuild, htmlMin()))
+        .pipe(gulpIf(prodBuild, gulp.dest(outputDir)))
         .pipe(connect.reload())
 });
 
@@ -68,7 +71,7 @@ gulp.task('js', function() {
   	gulp.src(jsSources)
     	.pipe(concat('script.js'))
     	.pipe(browserify())
-        .pipe(gulpIf(condition, uglify()))
+        .pipe(gulpIf(prodBuild, uglify()))
     	.pipe(gulp.dest(outputDir + 'js'))
         .pipe(connect.reload())
 });
@@ -81,7 +84,7 @@ gulp.task('compass', function() {
             style: sassStyle
     	})
     	.on('error', gutil.log))
-        .pipe(gulpIf(condition, cleanCss()))
+        .pipe(gulpIf(prodBuild, cleanCss()))
     	.pipe(gulp.dest(outputDir + 'css'))
         .pipe(connect.reload())
 });
@@ -98,7 +101,7 @@ gulp.task('watch', function() {
     gulp.watch(coffeeSources, ['coffee']);
     gulp.watch(jsSources, ['js']);
     gulp.watch('components/sass/*.scss', ['compass']);
-    gulp.watch(htmlSources, ['html']);
+    gulp.watch('builds/development/*.html', ['html']);
     gulp.watch(jsonSources, ['json']);
 });
 
