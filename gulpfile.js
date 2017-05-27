@@ -95,8 +95,8 @@ gulp.task('compass', function() {
 gulp.task('connect', function() { // rem 'callback' == 'anonymous function'
   connect.server({
     root: outputDir,
-    port: 8000, // numbers don't need quotes
-    livereload: true // booleans don't need quotes
+    port: 8000, 
+    livereload: true 
   });
 });
 
