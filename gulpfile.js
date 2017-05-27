@@ -59,6 +59,7 @@ gulp.task('html', function() {
 gulp.task('json', function() {
     gulp.src(jsonSources)
         .pipe(gulpIf(prodBuild, jsonMin()))
+        .pipe(gulpIf(prodBuild, gulp.dest(outputDir + 'js')))
         .pipe(connect.reload())
 });
 
