@@ -9,6 +9,7 @@ var gulp = require('gulp'),
     cleanCss = require('gulp-clean-css'),
     gulpIf = require('gulp-if'),
     htmlMin = require('gulp-html-minify');
+    jsonMin = require('gulp-jsonminify');
 
 var env,
     coffeeSources,
@@ -57,6 +58,7 @@ gulp.task('html', function() {
 
 gulp.task('json', function() {
     gulp.src(jsonSources)
+        .pipe(gulpIf(prodBuild, jsonMin()))
         .pipe(connect.reload())
 });
 
