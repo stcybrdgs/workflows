@@ -92,7 +92,7 @@ gulp.task('compass', function() {
         .pipe(connect.reload())
 });
 
-gulp.task('connect', function() { // rem 'callback' == 'anonymous function'
+gulp.task('connect', function() {
   connect.server({
     root: outputDir,
     port: 8000, 
