@@ -1,2 +1,2 @@
 # Workflows Course
-This project is an exercise in workflow management using Git, Gulp, and Browserify.
+This project is a new exercise in workflow management using Git, Gulp, and Browserify.
